@@ -34,4 +34,52 @@ grouped briefing each morning.
 
 ## Setup
 
-1. Clone the repo and create a virtual
+1. Clone the repo and create a virtual environment:
+
+       python3 -m venv .venv
+       source .venv/bin/activate        # Windows: .venv\Scripts\activate
+       pip install -r requirements.txt
+
+2. Create a `.env` file in the project root (never committed):
+
+       OPENAI_API_KEY=sk-...
+       GMAIL_ADDRESS=youraddress@gmail.com
+       GMAIL_APP_PASSWORD=your16charapppassword
+       RECIPIENTS=person1@example.com,person2@example.com
+
+   The Gmail value is a Google **app password** (requires 2-Step Verification on the
+   account), not the normal login password.
+
+## Running
+
+    python3 src/main.py
+
+This fetches, triages, summarises, writes a dated `.docx` to `output/`, and emails it.
+To check feed health at any time:
+
+    python3 src/audit_feeds.py
+
+## Configuration
+
+Sources live in `config.yaml`. Each has a `name`, `url`, and `section`. Adding a source
+is just adding a few lines; the audit script (`audit_feeds.py`) confirms whether a feed
+works. See `FEEDS_STATUS.md` for the current state of every source and the reasoning
+behind the ones that don't work.
+
+The relevance rubric lives in `CLASSIFY_PROMPT` inside `summarise.py` — edit it to widen
+or narrow what counts as relevant.
+
+## Deployment
+
+Designed to run on a schedule via GitHub Actions (daily, plus a manual "Run workflow"
+button for on-demand runs). The `.env` values are stored as GitHub repository secrets
+rather than committed. For handover, the API key and email account should belong to the
+organisation so the tool keeps running independently.
+
+## Roadmap
+
+- **Business sources (Phase 2):** extend `config.yaml` with parliamentary and financial
+  sources (gov.uk department feeds, committees, regulators). Triage already handles
+  relevance, so no rework is needed — items just need a `Business` category tag.
+- **Deduplication:** track seen articles to avoid repeats and handle missed runs.
+- **Comparative deep-dive:** an optional agentic summary of a few top stories.
