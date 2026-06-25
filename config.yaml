@@ -1,1 +1,81 @@
+sources:
+  # ---- International & Multinational Organisations ----
+  - name: WHO
+    url: https://www.who.int/rss-feeds/news-english.xml
+    section: International and Multinational Organisations
+  - name: UN News (Health)
+    url: https://news.un.org/feed/subscribe/en/news/topic/health/feed/rss.xml
+    section: International and Multinational Organisations
+  - name: Commonwealth
+    url: https://thecommonwealth.org/rss.xml
+    section: International and Multinational Organisations
 
+  # ---- UK & EU Government ----
+  - name: DHSC
+    url: https://www.gov.uk/government/organisations/department-of-health-and-social-care.atom
+    section: UK and EU Government
+  - name: NHS England
+    url: https://www.england.nhs.uk/feed/
+    section: UK and EU Government
+  - name: No 10 Downing Street
+    url: https://www.gov.uk/government/organisations/prime-ministers-office-10-downing-street.atom
+    section: UK and EU Government
+  - name: European Parliament News
+    url: https://www.europarl.europa.eu/rss/doc/press-releases/en.xml
+    section: UK and EU Government
+  - name: European Commission
+    url: https://ec.europa.eu/commission/presscorner/api/rss?language=en
+    section: UK and EU Government
+
+  # ---- Think Tanks ----
+  - name: Institute of Development Studies
+    url: https://www.ids.ac.uk/feed/
+    section: Think Tanks
+  - name: Chatham House
+    url: https://www.chathamhouse.org/path/whatsnew.xml
+    section: Think Tanks
+
+  # ---- International Health Organisations ----
+  - name: Unitaid
+    url: https://unitaid.org/feed/
+    section: International Health Organisations
+  - name: Pandemic Action Network
+    url: https://pandemicactionnetwork.org/feed/
+    section: International Health Organisations
+  - name: Global Sepsis Alliance
+    url: https://www.global-sepsis-alliance.org/news?format=rss
+    section: International Health Organisations
+  - name: The Global Fund
+    url: https://www.theglobalfund.org/data/rss-feeds/news-releases/
+    section: International Health Organisations
+
+  # ---- Academic Organisations ----
+  - name: LSHTM
+    url: https://www.lshtm.ac.uk/newsevents/news/feed
+    section: Academic Organisations
+  - name: The Lancet
+    url: https://www.thelancet.com/rssfeed/lancet_current.xml
+    section: Academic Organisations
+
+  # ---- Media Organisations ----
+  - name: Health Policy Watch
+    url: https://healthpolicy-watch.news/feed/
+    section: Media Organisations
+  - name: Guardian Global Development
+    url: https://www.theguardian.com/global-development/rss
+    section: Media Organisations
+  - name: EURACTIV Health
+    url: https://www.euractiv.com/sections/health-consumers/feed/
+    section: Media Organisations
+  - name: BBC Health
+    url: https://feeds.bbci.co.uk/news/health/rss.xml
+    section: Media Organisations
+
+  # ---- Not working (see FEEDS_STATUS.md) ----
+  # Bot-blocked (403/404 to automated requests):
+  #   OECD, The Health Foundation, The BMJ, Center for Global Development
+  # JavaScript-only feed page:
+  #   MMV
+  # No public feed (covered by UN News / media feeds):
+  #   UNDP, UNICEF, Nuffield Trust, ODI, Wellcome Trust, Devex,
+  #   World Bank, Imperial College, PATH, NCD Alliance

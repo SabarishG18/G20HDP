@@ -1,1 +1,6 @@
-
+feedparser
+python-docx
+google-genai
+python-dotenv
+pyyaml
+openai

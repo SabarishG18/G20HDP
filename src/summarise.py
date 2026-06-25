@@ -1,1 +1,117 @@
+import os
+import time
+from dotenv import load_dotenv
+from openai import OpenAI, APIError
 
+load_dotenv()
+
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+
+MODEL = "gpt-4o-mini"
+
+
+# ---- shared LLM call with retry (used by both summarise and classify) ----
+def _call(prompt, max_retries=6):
+    for attempt in range(max_retries):
+        try:
+            resp = client.chat.completions.create(
+                model=MODEL,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return resp.choices[0].message.content.strip()
+        except APIError as e:
+            wait = 5 * (attempt + 1)
+            print(f"  API error ({getattr(e, 'status_code', '?')}) — waiting {wait}s, retrying")
+            time.sleep(wait)
+    print("  gave up on one item after retries")
+    return ""
+
+
+# ---- summariser ----
+SUMMARISE_PROMPT = """You are compiling a daily health-policy monitoring briefing.
+Write a concise, factual 2-3 sentence summary of the article. Use a neutral,
+professional tone. Include only information present in the text — no opinions or
+invented detail. Do not begin with "This article" — just state what happened.
+
+Here is an example of the desired style:
+
+ARTICLE:
+The government has announced that NHS England will be "radically reduced" and
+"reshaped", with the size of the centre expected to fall by around half. Three of
+NHS England's leading board members — chief financial officer Julian Kelly, chief
+operating officer Dame Emily Lawson, and chief delivery officer and national director
+for vaccination and screening Steve Russell — have decided to step down in the coming
+weeks. Sir James Mackey will set up a transition team within NHS England to lead the
+reduction and reshaping of the centre alongside the Department of Health and Social
+Care. The changes represent the biggest reshaping of the NHS's national architecture
+in more than a decade, part of wider efforts to cut bureaucracy and bring the health
+service back under closer political control.
+
+SUMMARY:
+The government has announced it will be halving the size of NHS England to ensure
+taxpayers' money is being put to the "best possible use." Three of NHS England's
+leading board members—chief financial officer Julian Kelly, chief operating officer
+Emily Lawson, and chief delivery officer and national director for vaccination and
+screening Steve Russell—will also be leaving their posts at the end of March.
+
+Now summarise this article in the same style:
+
+ARTICLE:
+{article}
+
+SUMMARY:
+"""
+
+
+def summarise(article_text):
+    return _call(SUMMARISE_PROMPT.format(article=article_text))
+
+
+CLASSIFY_PROMPT = """You are triaging news for a daily monitoring briefing for the G20 & G7 Health
+and Development Partnership — an advocacy group working on global AND UK health policy, health systems,
+health innovation and R&D, health financing and investment, pandemic preparedness, antimicrobial
+resistance, non-communicable diseases, and the UN SDGs (especially SDG3 health and SDG17 partnerships).
+
+Classify the article for inclusion in the briefing. Reply with exactly one word:
+
+ACCEPT - clearly about health, health systems, health policy, or health financing/investment. This
+  INCLUDES domestic UK health news and government health spending (NHS funding, health budgets,
+  ministerial health statements), not just global health.
+REJECT - clearly unrelated: consumer health tips, local human-interest, sport, entertainment, or
+  general news with no plausible link to health or health financing.
+UNSURE - economic, financial, fiscal or political news that could bear on health financing or the
+  funding environment but is not clearly about health (e.g. central-bank decisions, budgets,
+  sustainable finance). When genuinely borderline, choose UNSURE so a human can decide.
+
+Examples:
+ARTICLE: The Global Fund launches a new financing mechanism to expand access to TB treatment. -> ACCEPT
+ARTICLE: MPs debate NHS workforce funding in the House of Commons. -> ACCEPT
+ARTICLE: The Chancellor unveils an autumn budget with changes to public spending. -> UNSURE
+ARTICLE: A report examines how sustainable finance markets are evolving this year. -> UNSURE
+ARTICLE: Five expert tips for a better night's sleep. -> REJECT
+ARTICLE: A Premier League club announces a new stadium sponsor. -> REJECT
+
+ARTICLE:
+{article}
+
+Answer:"""
+
+
+def classify(article_text):
+    answer = _call(CLASSIFY_PROMPT.format(article=article_text)).upper()
+    for label in ("ACCEPT", "REJECT", "UNSURE"):
+        if label in answer:
+            return label
+    return "UNSURE"
+
+
+if __name__ == "__main__":
+    tests = [
+        "WHO calls for increased investment in global health financing to close the SDG3 funding gap.",
+        "How to survive a heatwave: stay hydrated and keep out of the sun, BBC advises.",
+        "Treasury announces new funding package for NHS health infrastructure.",
+        "Bank of England holds interest rates at 4.5% amid inflation concerns.",
+        "Local council opens new community swimming pool this weekend.",
+    ]
+    for t in tests:
+        print(f"{classify(t):8} | {t[:65]}")
