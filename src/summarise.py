@@ -29,9 +29,15 @@ def _call(prompt, max_retries=6):
 
 # ---- summariser ----
 SUMMARISE_PROMPT = """You are compiling a daily health-policy monitoring briefing.
-Write a concise, factual 2-3 sentence summary of the article. Use a neutral,
-professional tone. Include only information present in the text — no opinions or
-invented detail. Do not begin with "This article" — just state what happened.
+Write a concise, factual summary of the article (2-4 sentences). Use a neutral,
+professional tone. Where the source makes it clear, your summary should convey:
+what was announced or happened; who is involved (the key organisations or people);
+and why it matters to the G20 & G7 Health and Development Partnership, whose focus is
+global and UK health, health financing and investment, health systems strengthening,
+pandemic preparedness, AMR, NCDs and the UN SDGs. Only state a relevance angle where
+the article genuinely supports it — never speculate or invent a connection. Include
+only information present in the text — no opinions or invented detail. Do not begin
+with "This article" — just state what happened.
 
 Here is an example of the desired style:
 

@@ -4,6 +4,7 @@ from docx import Document
 
 SECTION_ORDER = [
     "International and Multinational Organisations",
+    "G20 and G7",
     "UK and EU Government",
     "Think Tanks",
     "International Health Organisations",

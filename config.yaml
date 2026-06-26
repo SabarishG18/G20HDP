@@ -65,17 +65,81 @@ sources:
     url: https://www.theguardian.com/global-development/rss
     section: Media Organisations
   - name: EURACTIV Health
-    url: https://www.euractiv.com/sections/health-consumers/feed/
+    url: "https://news.google.com/rss/search?q=site:euractiv.com+health&hl=en-GB&gl=GB&ceid=GB:en"
     section: Media Organisations
   - name: BBC Health
     url: https://feeds.bbci.co.uk/news/health/rss.xml
     section: Media Organisations
 
-  # ---- Not working (see FEEDS_STATUS.md) ----
-  # Bot-blocked (403/404 to automated requests):
-  #   OECD, The Health Foundation, The BMJ, Center for Global Development
-  # JavaScript-only feed page:
-  #   MMV
-  # No public feed (covered by UN News / media feeds):
-  #   UNDP, UNICEF, Nuffield Trust, ODI, Wellcome Trust, Devex,
-  #   World Bank, Imperial College, PATH, NCD Alliance
+  # ---- Sources without a usable native RSS, pulled via Google News search feeds ----
+  # International & Multinational
+  - name: OECD
+    url: "https://news.google.com/rss/search?q=%22OECD%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International and Multinational Organisations
+  - name: World Bank
+    url: "https://news.google.com/rss/search?q=%22World+Bank%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International and Multinational Organisations
+  - name: UNDP
+    url: "https://news.google.com/rss/search?q=%22UNDP%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International and Multinational Organisations
+  - name: UNICEF
+    url: "https://news.google.com/rss/search?q=%22UNICEF%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International and Multinational Organisations
+
+  # G20 / G7
+  - name: G20 (US presidency 2026)
+    url: "https://news.google.com/rss/search?q=G20+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: G20 and G7
+  - name: G7 (France presidency 2026)
+    url: "https://news.google.com/rss/search?q=G7+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: G20 and G7
+
+  # Think Tanks
+  - name: The Health Foundation
+    url: "https://news.google.com/rss/search?q=%22The+Health+Foundation%22+NHS&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Think Tanks
+  - name: Nuffield Trust
+    url: "https://news.google.com/rss/search?q=%22Nuffield+Trust%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Think Tanks
+  - name: Overseas Development Institute
+    url: "https://news.google.com/rss/search?q=%22Overseas+Development+Institute%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Think Tanks
+  - name: Center for Global Development
+    url: "https://news.google.com/rss/search?q=%22Center+for+Global+Development%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Think Tanks
+
+  # International Health Organisations
+  - name: Gates Foundation
+    url: "https://news.google.com/rss/search?q=%22Gates+Foundation%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: Bloomberg Philanthropies
+    url: "https://news.google.com/rss/search?q=%22Bloomberg+Philanthropies%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: Grand Challenges Canada
+    url: "https://news.google.com/rss/search?q=%22Grand+Challenges+Canada%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: Wellcome Trust
+    url: "https://news.google.com/rss/search?q=%22Wellcome+Trust%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: PATH
+    url: "https://news.google.com/rss/search?q=%22PATH%22+global+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: MMV
+    url: "https://news.google.com/rss/search?q=%22Medicines+for+Malaria+Venture%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+  - name: NCD Alliance
+    url: "https://news.google.com/rss/search?q=%22NCD+Alliance%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: International Health Organisations
+
+  # Academic
+  - name: The BMJ
+    url: "https://news.google.com/rss/search?q=%22British+Medical+Journal%22&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Academic Organisations
+  - name: Imperial College
+    url: "https://news.google.com/rss/search?q=%22Imperial+College%22+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Academic Organisations
+
+  # Media
+  - name: Devex
+    url: "https://news.google.com/rss/search?q=site:devex.com+global+health&hl=en-GB&gl=GB&ceid=GB:en"
+    section: Media Organisations
