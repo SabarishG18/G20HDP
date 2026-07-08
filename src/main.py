@@ -6,6 +6,7 @@ from filter import filter_recent
 from summarise import summarise, classify
 from build_doc import build_doc, build_email_html
 from deliver import send_email
+from dedup import deduplicate
 
 
 def load_sources(path="config.yaml"):
@@ -38,6 +39,9 @@ if __name__ == "__main__":
     sources = load_sources()
     print("Fetching…")
     items = collect_items(sources, hours=24)
+
+    items = deduplicate(items)
+    print(f"\n{len(items)} unique stories after removing duplicates")
 
     print(f"\nTriaging {len(items)} items…")
     for i, it in enumerate(items, 1):

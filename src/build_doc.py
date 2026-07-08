@@ -8,6 +8,7 @@ SECTION_ORDER = [
     "UK and EU Government",
     "Think Tanks",
     "International Health Organisations",
+    "Legislative and Specialist Networks",
     "Academic Organisations",
     "Media Organisations",
 ]
@@ -21,8 +22,16 @@ def _email_item_html(it):
     title    = html.escape(it["title"])
     synopsis = html.escape(it.get("synopsis", ""))
     link     = html.escape(it["link"], quote=True)
-    return (f'<p><strong>{source} — {_date(it)} — '
-            f'<a href="{link}">{title}</a></strong><br>{synopsis}</p>')
+    body = (f'<p><strong>{source} — {_date(it)} — '
+            f'<a href="{link}">{title}</a></strong><br>{synopsis}')
+    also = it.get("also", [])
+    if also:
+        links = ", ".join(
+            f'<a href="{html.escape(a["link"], quote=True)}">{html.escape(a["source"])}</a>'
+            for a in also
+        )
+        body += f'<br><em>Also covered by: {links}</em>'
+    return body + "</p>"
 
 
 def build_email_html(items):
@@ -61,6 +70,8 @@ def build_doc(items, filename):
             doc.add_heading(f"{it['source']} — {_date(it)} — {it['title']}", level=2)
             doc.add_paragraph(it.get("synopsis", ""))
             doc.add_paragraph(it["link"])
+            if it.get("also"):
+                doc.add_paragraph("Also covered by: " + ", ".join(a["source"] for a in it["also"]))
 
     # Unsure — flagged for human review
     if unsure:
@@ -69,5 +80,7 @@ def build_doc(items, filename):
             doc.add_heading(f"{it['source']} — {_date(it)} — {it['title']}", level=2)
             doc.add_paragraph(it.get("synopsis", ""))
             doc.add_paragraph(it["link"])
+            if it.get("also"):
+                doc.add_paragraph("Also covered by: " + ", ".join(a["source"] for a in it["also"]))
 
     doc.save(filename)

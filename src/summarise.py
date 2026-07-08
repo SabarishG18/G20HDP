@@ -74,28 +74,37 @@ def summarise(article_text):
 
 
 CLASSIFY_PROMPT = """You are triaging news for a daily monitoring briefing for the G20 & G7 Health
-and Development Partnership — an advocacy group working on global AND UK health policy, health systems,
-health innovation and R&D, health financing and investment, pandemic preparedness, antimicrobial
-resistance, non-communicable diseases, and the UN SDGs (especially SDG3 health and SDG17 partnerships).
+and Development Partnership, which operates at the high-level policy and finance end of global health:
+health financing and investment, health systems strengthening, multilateral and ministerial health
+policy (G7/G20, WHO, EU, World Bank, IMF, African Union), pandemic preparedness, AMR, NCDs, and the
+health-related UN SDGs.
 
-Classify the article for inclusion in the briefing. Reply with exactly one word:
+Prioritise high-level policy, financing and structural developments. Skip soft, consumer or single
+clinical health news. Reply with exactly one word:
 
-ACCEPT - clearly about health, health systems, health policy, or health financing/investment. This
-  INCLUDES domestic UK health news and government health spending (NHS funding, health budgets,
-  ministerial health statements), not just global health.
-REJECT - clearly unrelated: consumer health tips, local human-interest, sport, entertainment, or
-  general news with no plausible link to health or health financing.
-UNSURE - economic, financial, fiscal or political news that could bear on health financing or the
-  funding environment but is not clearly about health (e.g. central-bank decisions, budgets,
-  sustainable finance). When genuinely borderline, choose UNSURE so a human can decide.
+ACCEPT - health POLICY shifts; health FINANCING or economics; structural or health-SYSTEMS change; and
+  actions by governments, ministries, parliaments, or multilateral/financing bodies (new funding,
+  reforms, strategies, resolutions, major R&D/access or preparedness initiatives). Domestic UK health
+  policy and spending count. National disease plans, strategies and frameworks (e.g. a cardiovascular
+  or NCD plan) and health-systems guidance are policy and count as ACCEPT, even without a funding figure.
+REJECT - soft or consumer health (lifestyle, wellness, diet/exercise, "laughter lowers blood pressure"
+  studies), single clinical findings with no policy or systems angle, routine leadership appointments
+  or staff changes, local human-interest, sport, entertainment, or anything with no link to health
+  policy or financing.
+UNSURE - borderline: economic, financial or political news that may bear on health financing but is not
+  clearly health; or health news whose policy/systems relevance is unclear. Choose UNSURE for a human.
 
 Examples:
-ARTICLE: The Global Fund launches a new financing mechanism to expand access to TB treatment. -> ACCEPT
-ARTICLE: MPs debate NHS workforce funding in the House of Commons. -> ACCEPT
+ARTICLE: The World Bank approves a new health-financing facility for low-income countries. -> ACCEPT
+ARTICLE: G20 finance ministers back coordinated pandemic-preparedness funding. -> ACCEPT
+ARTICLE: MPs debate NHS structural reform and long-term funding. -> ACCEPT
+ARTICLE: The government launches a new national cardiovascular disease and stroke plan. -> ACCEPT
+ARTICLE: WHO issues guidance for countries to strengthen their health systems. -> ACCEPT
+ARTICLE: Study finds laughter may lower blood pressure. -> REJECT
+ARTICLE: Ten foods to boost your immune system this winter. -> REJECT
 ARTICLE: The Chancellor unveils an autumn budget with changes to public spending. -> UNSURE
-ARTICLE: A report examines how sustainable finance markets are evolving this year. -> UNSURE
-ARTICLE: Five expert tips for a better night's sleep. -> REJECT
 ARTICLE: A Premier League club announces a new stadium sponsor. -> REJECT
+ARTICLE: The IMF names a new chief economist. -> REJECT
 
 ARTICLE:
 {article}
