@@ -3,8 +3,8 @@ import time
 import yaml
 from fetch import get_entries
 from filter import filter_recent
-from summarise import summarise, classify
-from build_doc import build_doc, build_email_html
+from summarise import summarise, classify, editor_note, pick_lead
+from build_doc import build_email_html, build_pdf
 from deliver import send_email
 from dedup import deduplicate
 
@@ -55,14 +55,22 @@ if __name__ == "__main__":
         it["synopsis"] = summarise(f"{it['title']}. {it['feed_summary']}")
         print(f"  {i}/{len(to_summarise)} — {it['source']}: {it['title'][:200]}")
 
+    # Editorial layer: editor's note + lead story (from the accepted items)
+    accepts = [it for it in items if it["relevance"] == "ACCEPT"]
+    print("\nWriting the editor's note and choosing the lead story…")
+    note = editor_note(accepts)
+    lead, lead_why = pick_lead(accepts)
+
+    html_body = build_email_html(items, note=note, lead=lead, lead_why=lead_why)
+
     os.makedirs("output", exist_ok=True)
-    filename = os.path.join("output", f"daily_monitoring_{time.strftime('%Y-%m-%d')}.docx")
-    build_doc(items, filename)
-    html_body = build_email_html(items)
+    filename = os.path.join("output", f"daily_monitoring_{time.strftime('%Y-%m-%d')}.pdf")
+    build_pdf(html_body, filename)
+
     send_email(
         subject=f"Daily Health Monitoring — {time.strftime('%d %b %Y')}",
         html_body=html_body,
-        attachment_path=filename,
+        attachment_path=filename if os.path.exists(filename) else None,
     )
     print("Emailed.")
 

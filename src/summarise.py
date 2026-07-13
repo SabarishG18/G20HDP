@@ -120,6 +120,67 @@ def classify(article_text):
     return "UNSURE"
 
 
+# ---- editorial layer ----
+def _numbered(items, limit=25):
+    lines = []
+    for i, it in enumerate(items[:limit], 1):
+        text = it.get("synopsis") or it.get("feed_summary", "")
+        lines.append(f"{i}. [{it['source']}] {it['title']} — {text}")
+    return "\n".join(lines)
+
+
+EDITOR_NOTE_PROMPT = """You are the editor of a daily morning briefing on global health policy and financing
+for the G20 & G7 Health and Development Partnership, read by policy and advocacy staff.
+
+Write a short editor's note to open today's briefing: 2-3 sentences, roughly 40-70 words. Identify the
+two or three most significant threads across the items below and connect them into a natural, readable
+opening — do not just list headlines. Open with "Good morning." Keep the tone measured and professional,
+not breathless: no cliches, no marketing language, no exclamation marks. Report neutrally; do not advocate.
+Use UK English. Refer only to things actually present in the items; do not invent.
+
+TODAY'S ITEMS:
+{items}
+
+Editor's note:"""
+
+
+def editor_note(items):
+    if not items:
+        return ""
+    return _call(EDITOR_NOTE_PROMPT.format(items=_numbered(items)))
+
+
+LEAD_PROMPT = """You are the editor of a daily briefing on global health policy and financing for the
+G20 & G7 Health and Development Partnership. From the numbered items below, choose the single most
+significant as today's lead story. Prioritise high-level developments — health financing, health-systems
+change, and action by governments, ministries, parliaments or multilateral/financing bodies — over
+routine or local items.
+
+Then write one or two sentences on why it matters to the Partnership, grounded only in the item's content:
+no speculation, no invented detail. Neutral tone, UK English.
+
+Reply in exactly this format:
+LEAD: <the item number>
+WHY: <one or two sentences>
+
+ITEMS:
+{items}"""
+
+
+def pick_lead(items):
+    if not items:
+        return None, ""
+    import re
+    out = _call(LEAD_PROMPT.format(items=_numbered(items)))
+    m = re.search(r"LEAD:\s*(\d+)", out)
+    idx = int(m.group(1)) - 1 if m else 0
+    if idx < 0 or idx >= len(items):
+        idx = 0
+    w = re.search(r"WHY:\s*(.+)", out, re.S)
+    why = w.group(1).strip() if w else ""
+    return items[idx], why
+
+
 if __name__ == "__main__":
     tests = [
         "WHO calls for increased investment in global health financing to close the SDG3 funding gap.",
